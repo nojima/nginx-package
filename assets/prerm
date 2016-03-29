@@ -1,0 +1,4 @@
+#!/bin/sh -eu
+if [ "$1" = "remove" ]; then
+    update-rc.d -f nginx remove
+fi

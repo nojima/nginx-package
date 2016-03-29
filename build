@@ -1,0 +1,81 @@
+#!/bin/sh -eux
+
+revision=${REVISION:-1}
+base_dir="$(readlink -f -- "$(dirname "$0")")"
+output_dir="${base_dir}"
+assets_dir="${base_dir}/assets"
+package_dir="${base_dir}/pkg"
+rm -rf "${package_dir}"
+mkdir "${package_dir}"
+
+cd nginx
+
+: "=========== configure ==========="
+./auto/configure \
+    --prefix=/srv/nginx \
+    --sbin-path=/usr/sbin/nginx \
+    --conf-path=/etc/nginx/nginx.conf \
+    --error-log-path=/var/log/nginx/error.log \
+    --pid-path=/run/nginx.pid \
+    --lock-path=/run/lock \
+    --user=nginx \
+    --group=nginx \
+    --build=nojima \
+    --with-threads \
+    --with-ipv6 \
+    --with-http_ssl_module \
+    --with-http_v2_module \
+    --with-http_gzip_static_module \
+    --with-http_stub_status_module \
+    --http-log-path=/var/log/nginx/access.log \
+    --http-client-body-temp-path=/var/lib/nginx/client-body \
+    --http-proxy-temp-path=/var/lib/nginx/proxy \
+    --http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
+    --http-uwsgi-temp-path=/var/lib/nginx/uwsgi \
+    --http-scgi-temp-path=/var/lib/nginx/scgi \
+    --with-cc-opt="-O2" \
+    --with-pcre \
+    --with-pcre-jit \
+    --with-debug
+
+: "=========== make ==========="
+make
+DESTDIR="${package_dir}" make install
+
+# Remove default config files.
+rm -r "${package_dir}/etc/nginx"
+mkdir "${package_dir}/etc/nginx"
+rm -r "${package_dir}/srv/nginx"
+mkdir "${package_dir}/srv/nginx"
+
+# Copy SysV init script.
+mkdir "${package_dir}/etc/init.d"
+cp "${assets_dir}/nginx-sysvinit-script/init" "${package_dir}/etc/init.d/nginx"
+chmod +x "${package_dir}/etc/init.d/nginx"
+mkdir "${package_dir}/etc/default"
+cp "${assets_dir}/nginx-sysvinit-script/defaults" "${package_dir}/etc/default/nginx"
+
+# Calculate installed size.
+installed_size="$(du --apparent-size --summarize -- "${package_dir}" | cut -f1)"
+
+# Create control files.
+mkdir "${package_dir}/DEBIAN"
+
+nginx_version=$("${package_dir}/usr/sbin/nginx" -v 2>&1 | perl -ne '/nginx\/([0-9.]+)/ && print $1')
+cat > "${package_dir}/DEBIAN/control" <<EOF
+Package: nginx-nojima
+Priority: optional
+Section: web
+Installed-Size: ${installed_size}
+Version: ${nginx_version}-${revision}
+Maintainer: Yusuke Nojima <nojima@ynojima.com>
+Architecture: amd64
+Description: An HTTP and reverse proxy server
+EOF
+
+# Copy maintainer scripts.
+cp "${assets_dir}/postinst" "${package_dir}/DEBIAN/postinst"
+cp "${assets_dir}/prerm" "${package_dir}/DEBIAN/prerm"
+
+: "=========== dpkg-deb --build ==========="
+fakeroot dpkg-deb --build "${package_dir}" "${output_dir}"
