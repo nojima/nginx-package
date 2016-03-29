@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# ------------------------------------------------------------------------------
+# Defaults for nginx SysVinit script.
+#
+# @author Richard Fussenegger <fleshgrinder@users.noreply.github.com>
+# @copyright 2013-15 Richard Fussenegger
+# @license http://unlicense.org/ PD
+# ------------------------------------------------------------------------------
+
+# Canonical absolute path to the PID file.
+#
+# DEFAULT: /run/nginx.pid
+#PIDFILE=/var/run/nginx.pid
+
+# Arguments that should be passed to the daemon.
+#
+# DEFAULT: ''
+#DAEMON_ARGS=''
+
+# Override verbosity environment variable.
+#
+# DEFAULT: no
+#VERBOSE=yes
