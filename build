@@ -40,7 +40,7 @@ cd nginx
     --with-debug
 
 : "=========== make ==========="
-make
+make -j "$(nproc)"
 DESTDIR="${package_dir}" make install
 
 # Remove default config files.
