@@ -1,6 +1,6 @@
 #!/bin/sh -eux
 
-revision=${REVISION:-1}
+revision="${REVISION:-1}"
 base_dir="$(readlink -f -- "$(dirname "$0")")"
 output_dir="${base_dir}"
 assets_dir="${base_dir}/assets"
@@ -33,7 +33,8 @@ cd nginx
     --http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
     --http-uwsgi-temp-path=/var/lib/nginx/uwsgi \
     --http-scgi-temp-path=/var/lib/nginx/scgi \
-    --with-cc-opt="-O2" \
+    --with-cc-opt="-fsanitize=address -static-libasan" \
+    --with-ld-opt="-fsanitize=address -static-libasan" \
     --with-pcre \
     --with-pcre-jit \
     --with-debug
