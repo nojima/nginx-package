@@ -1,0 +1,9 @@
+sudo: required
+dist: trusty
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq mercurial build-essential libpcre3-dev libssl-dev zlib1g-dev
+script:
+  - hg clone http://hg.nginx.org/nginx
+  - cd nginx && hg checkout release-1.9.13 && cd ..
+  - ./build
