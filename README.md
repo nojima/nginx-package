@@ -1,6 +1,8 @@
 nginx-package
 =============
 
+[![Build Status](https://travis-ci.org/nojima/nginx-package.svg?branch=master)](https://travis-ci.org/nojima/nginx-package)
+
 `nginx-package` is a nginx packaging script for me.
 This script creates nginx deb package containing nginx binary and its sysvinit script.
 
