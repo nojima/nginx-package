@@ -1,14 +1,20 @@
 #!/bin/sh -eux
 
-revision="${REVISION:-1}"
-base_dir="$(readlink -f -- "$(dirname "$0")")"
-output_dir="${base_dir}"
+if [ -z "$1" ]; then
+    echo "Usage: build REVISION" >&2
+    exit 1
+fi
+revision="$1"
+
+base_dir="$(readlink -f -- "$(dirname "$0")/..")"
+output_dir="${base_dir}/deb"
+repo_dir="${base_dir}/repo"
 assets_dir="${base_dir}/assets"
 package_dir="${base_dir}/pkg"
 rm -rf "${package_dir}"
 mkdir "${package_dir}"
 
-cd nginx
+cd "${repo_dir}"
 
 : "=========== configure ==========="
 ./auto/configure \
@@ -79,4 +85,5 @@ cp "${assets_dir}/postinst" "${package_dir}/DEBIAN/postinst"
 cp "${assets_dir}/prerm" "${package_dir}/DEBIAN/prerm"
 
 : "=========== dpkg-deb --build ==========="
+mkdir -p "${output_dir}"
 fakeroot dpkg-deb --build "${package_dir}" "${output_dir}"

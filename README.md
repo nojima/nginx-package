@@ -9,17 +9,9 @@ This script creates nginx deb package containing nginx binary and its sysvinit s
 How to use
 ----------
 
-1. Install build dependencies by hand.
+1. Install build dependencies by `sudo make build-dep`. (only works on Ubuntu)
 
-2. `cd` to this directory.
-
-3. Get nginx source code:
-   ```
-   hg clone http://hg.nginx.org/nginx
-   ```
-
-4. Checkout any release you like.
-
-4. Run `./build`.
+2. Run `make`.
    If everything works fine, `nginx-nojima_<version>-<revision>_amd64.deb` will be generated.
-   You can change `<revision>` with `REVISION` environment variable (ex. `REVISION=42 ./build`).
+
+You can specify nginx version and deb revision by `versions.json`.
