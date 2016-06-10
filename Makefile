@@ -1,9 +1,9 @@
 deb: repo
+	cd repo && hg update && hg checkout release-$(shell jq -r '.upstream' versions.json)
 	assets/build $(shell jq -r '.revision' versions.json)
 
 repo:
 	hg clone http://hg.nginx.org/nginx repo
-	cd repo && hg checkout release-$(shell jq -r '.upstream' versions.json)
 
 build-dep:
 	apt-get update
