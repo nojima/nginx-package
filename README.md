@@ -12,6 +12,6 @@ How to use
 1. Install build dependencies by `sudo make build-dep`. (only works on Ubuntu)
 
 2. Run `make`.
-   If everything works fine, `nginx-nojima_<version>-<revision>_amd64.deb` will be generated.
+   If everything works fine, `nojima-nginx_<version>-<revision>_amd64.deb` will be generated.
 
 You can specify nginx version and deb revision by `versions.json`.
