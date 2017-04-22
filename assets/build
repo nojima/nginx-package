@@ -90,6 +90,9 @@ Depends: libpcre3, libssl1.0.0, zlib1g, curl
 Description: An HTTP and reverse proxy server
 EOF
 
+# Create conffiles.
+(cd "$package_dir" && find ./etc -type f | cut --bytes 2-) > "${package_dir}/DEBIAN/conffiles"
+
 # Copy maintainer scripts.
 cp "${assets_dir}/postinst" "${package_dir}/DEBIAN/postinst"
 cp "${assets_dir}/prerm" "${package_dir}/DEBIAN/prerm"
