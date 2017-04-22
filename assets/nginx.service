@@ -9,6 +9,7 @@ ExecStart=/usr/local/sbin/nginx
 ExecStartPre=/usr/local/share/nginx/bin/nginx-prestart
 ExecReload=/usr/local/share/nginx/bin/nginx-reload
 Restart=on-failure
+SuccessExitStatus=SIGQUIT
 KillSignal=SIGQUIT
 TimeoutStopSec=65
 
