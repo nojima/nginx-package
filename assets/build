@@ -86,6 +86,7 @@ Installed-Size: ${installed_size}
 Version: ${nginx_version}-${revision}
 Maintainer: Yusuke Nojima <nojima@ynojima.com>
 Architecture: amd64
+Depends: libpcre3, libssl1.0.0, zlib1g, curl
 Description: An HTTP and reverse proxy server
 EOF
 
