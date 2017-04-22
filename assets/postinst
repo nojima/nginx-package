@@ -1,5 +1,5 @@
 #!/bin/sh -e
 adduser --system --group --quiet --home /var/lib/nginx nginx
-mkdir -p /var/log/nginx
-chown nginx:adm /var/log/nginx
-update-rc.d nginx defaults
+
+systemctl daemon-reload
+systemctl enable nginx.service

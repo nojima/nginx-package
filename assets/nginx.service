@@ -1,0 +1,16 @@
+[Unit]
+Description=nginx
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/nginx
+ExecStartPre=/usr/local/share/nginx/bin/nginx-prestart
+ExecReload=/usr/local/share/nginx/bin/nginx-reload
+Restart=on-failure
+KillSignal=SIGQUIT
+TimeoutStopSec=65
+
+[Install]
+WantedBy=mutli-user.target

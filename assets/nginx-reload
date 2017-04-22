@@ -1,0 +1,34 @@
+#!/bin/sh -eu
+
+nginx="/usr/local/sbin/nginx"
+nginx_socket_path="/run/nginx/nginx.sock"
+config_id_path="/run/nginx/config-id.conf"
+max_wait_retries="60"
+
+# generate new config id
+new_id="$(head --bytes 15 /dev/urandom | base64)"
+if [ -z "$new_id" ]; then
+  echo "ERROR: failed to generate new config-id." >&2
+  exit 1
+fi
+
+# write config id
+cat <<EOF > $config_id_path
+return 200 "${new_id}";
+EOF
+
+# reload nginx
+echo "reload nginx..." >&2
+$nginx -s reload
+
+# wait for reload completion
+for _ in $(seq 1 "$max_wait_retries"); do
+  sleep 1
+  current_id="$(curl --silent --fail --unix-socket "$nginx_socket_path" http://localhost/config-id)"
+  if [ "$current_id" = "$new_id" ]; then
+    echo "nginx has been succesfully reloaded." >&2
+    exit 0
+  fi
+done
+echo "ERROR: failed to reload nginx: timed out." >&2
+exit 1

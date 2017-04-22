@@ -1,0 +1,10 @@
+#!/bin/sh -eu
+
+nginx_log_dir="/var/log/nginx"
+nginx_run_dir="/run/nginx"
+
+mkdir -p "$nginx_log_dir"
+chown nginx:adm "$nginx_log_dir"
+
+mkdir -p "$nginx_run_dir"
+chown root:root "$nginx_run_dir"

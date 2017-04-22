@@ -1,0 +1,4 @@
+#!/bin/sh -eu
+
+nginx_socket_path="/run/nginx/nginx.sock"
+curl --silent --fail --unix-socket "$nginx_socket_path" http://localhost/status
